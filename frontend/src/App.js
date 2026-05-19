@@ -2320,6 +2320,7 @@ function PurchaseInvoices() {
   const [items, setItems] = useState([]);
   const [billFile, setBillFile] = useState(null);
   const [purchaseInvoices, setPurchaseInvoices] = useState([]);
+  const [selectedPurchaseInvoice, setSelectedPurchaseInvoice] = useState(null);
 
   React.useEffect(() => {
     fetchPurchaseInvoices();
@@ -2608,7 +2609,11 @@ function PurchaseInvoices() {
 
           <tbody>
             {purchaseInvoices.map((invoice) => (
-              <tr key={invoice._id}>
+              <tr
+  key={invoice._id}
+  onClick={() => setSelectedPurchaseInvoice(invoice)}
+  style={{ cursor: "pointer" }}
+>
                 <td>{invoice.purchaseDate}</td>
                 <td>{invoice.supplierName}</td>
 
@@ -2642,6 +2647,70 @@ function PurchaseInvoices() {
             ))}
           </tbody>
         </table>
+        {selectedPurchaseInvoice && (
+  <div className="invoice-modal-overlay">
+    <div className="invoice-view-modal">
+      <div className="invoice-modal-header">
+        <h2>Purchase Invoice Details</h2>
+
+        <button onClick={() => setSelectedPurchaseInvoice(null)}>
+          ✕
+        </button>
+      </div>
+
+      <div className="invoice-info-grid">
+        <div>
+          <p><strong>Supplier:</strong> {selectedPurchaseInvoice.supplierName}</p>
+          <p><strong>Phone:</strong> {selectedPurchaseInvoice.supplierPhone || "-"}</p>
+          <p><strong>Date:</strong> {selectedPurchaseInvoice.purchaseDate}</p>
+        </div>
+
+        <div>
+          <p><strong>Payment Mode:</strong> {selectedPurchaseInvoice.paymentMode}</p>
+          <p><strong>Status:</strong> {selectedPurchaseInvoice.paymentStatus}</p>
+          <p><strong>Total Amount:</strong> ₹{selectedPurchaseInvoice.totalAmount}</p>
+        </div>
+      </div>
+
+      <h3 className="invoice-items-heading">Purchased Products</h3>
+
+      <table className="invoice-items-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Product</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Purchase Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {(selectedPurchaseInvoice.items || []).map((item, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{item.productName}</td>
+              <td>{item.brand}</td>
+              <td>{item.category}</td>
+              <td>{item.quantity}</td>
+              <td>₹{item.purchasePrice}</td>
+              <td>₹{item.total}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <button
+        className="close-btn"
+        onClick={() => setSelectedPurchaseInvoice(null)}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
       </div>
     </div>
   );
@@ -2693,18 +2762,37 @@ function ProfitLoss() {
   };
 
   const getPurchasePrice = (productName) => {
-  const purchase = purchaseInvoices.find((invoice) => {
-    const purchaseName = invoice.productName?.toLowerCase().trim();
-    const saleName = productName?.toLowerCase().trim();
+  let matchedPrice = 0;
 
-    return (
-      purchaseName === saleName ||
-      purchaseName?.includes(saleName) ||
-      saleName?.includes(purchaseName)
-    );
+  purchaseInvoices.forEach((invoice) => {
+    if (invoice.items && invoice.items.length > 0) {
+      invoice.items.forEach((item) => {
+        const purchaseName = item.productName?.toLowerCase().trim();
+        const saleName = productName?.toLowerCase().trim();
+
+        if (
+          purchaseName === saleName ||
+          purchaseName?.includes(saleName) ||
+          saleName?.includes(purchaseName)
+        ) {
+          matchedPrice = Number(item.purchasePrice || 0);
+        }
+      });
+    } else {
+      const purchaseName = invoice.productName?.toLowerCase().trim();
+      const saleName = productName?.toLowerCase().trim();
+
+      if (
+        purchaseName === saleName ||
+        purchaseName?.includes(saleName) ||
+        saleName?.includes(purchaseName)
+      ) {
+        matchedPrice = Number(invoice.purchasePrice || 0);
+      }
+    }
   });
 
-  return Number(purchase?.purchasePrice || 0);
+  return matchedPrice;
 };
 
   const productProfitMap = {};
@@ -2730,6 +2818,14 @@ function ProfitLoss() {
       productProfitMap[name].salesAmount += sellingPrice * qty;
       productProfitMap[name].purchaseCost += purchasePrice * qty;
       productProfitMap[name].profit += (sellingPrice - purchasePrice) * qty;
+      productProfitMap[name].profitPercent =
+      productProfitMap[name].purchaseCost > 0
+    ? (
+        (productProfitMap[name].profit /
+          productProfitMap[name].purchaseCost) *
+        100
+      ).toFixed(2)
+    : 0;
     });
   });
 
@@ -2749,6 +2845,7 @@ function ProfitLoss() {
     (sum, item) => sum + item.profit,
     0
   );
+  
 
   const profitMargin =
     totalSales > 0 ? ((grossProfit / totalSales) * 100).toFixed(2) : 0;
@@ -2799,7 +2896,8 @@ function ProfitLoss() {
               <th>Cost Price / Unit</th>
               <th>Selling Amount</th>
               <th>Total Cost</th>
-              <th>Profit</th>                                             
+              <th>Profit</th>  
+              <th>Profit %</th>                                           
             </tr>
           </thead>
 
@@ -2819,6 +2917,7 @@ function ProfitLoss() {
                   <td>₹{item.salesAmount.toFixed(2)}</td>
                   <td>₹{item.purchaseCost.toFixed(2)}</td>
                   <td>₹{item.profit.toFixed(2)}</td>
+                  <td>{item.profitPercent}%</td>
                 </tr>
               ))
             )}

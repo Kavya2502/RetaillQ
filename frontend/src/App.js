@@ -2435,6 +2435,42 @@ function PurchaseInvoices() {
       alert("Could not create invoice");
     }
   };
+  const deletePurchaseInvoice = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this purchase invoice?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/purchase-invoices/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert("Purchase invoice deleted successfully");
+
+    setSelectedPurchaseInvoice(null);
+
+    fetchPurchaseInvoices();
+  } catch (error) {
+    console.log(error);
+
+    alert("Could not delete purchase invoice");
+  }
+};
 
   return (
     <div className="sales-page">
@@ -2671,7 +2707,34 @@ function PurchaseInvoices() {
           <p><strong>Total Amount:</strong> ₹{selectedPurchaseInvoice.totalAmount}</p>
         </div>
       </div>
+      {selectedPurchaseInvoice.billFile?.cloudinaryUrl && (
+  <div
+    style={{
+      marginBottom: "20px",
+      textAlign: "center",
+    }}
+  >
+    <h3>Uploaded Bill</h3>
 
+    <img
+      src={selectedPurchaseInvoice.billFile.cloudinaryUrl}
+      alt="Bill"
+      style={{
+        width: "300px",
+        maxWidth: "100%",
+        borderRadius: "12px",
+        border: "1px solid #ddd",
+        cursor: "pointer",
+      }}
+      onClick={() =>
+        window.open(
+          selectedPurchaseInvoice.billFile.cloudinaryUrl,
+          "_blank"
+        )
+      }
+    />
+  </div>
+)}
       <h3 className="invoice-items-heading">Purchased Products</h3>
 
       <table className="invoice-items-table">
@@ -2702,12 +2765,36 @@ function PurchaseInvoices() {
         </tbody>
       </table>
 
-      <button
-        className="close-btn"
-        onClick={() => setSelectedPurchaseInvoice(null)}
-      >
-        Close
-      </button>
+      <div
+  style={{
+    display: "flex",
+    gap: "12px",
+    marginTop: "20px",
+  }}
+>
+  <button
+    className="close-btn"
+    onClick={() => setSelectedPurchaseInvoice(null)}
+  >
+    Close
+  </button>
+
+  <button
+    className="delete-btn"
+    onClick={() => deletePurchaseInvoice(selectedPurchaseInvoice._id)}
+    style={{
+      background: "#ef4444",
+      color: "#fff",
+      border: "none",
+      padding: "12px 20px",
+      borderRadius: "10px",
+      cursor: "pointer",
+      fontWeight: "600",
+    }}
+  >
+    Delete Invoice
+  </button>
+</div>
     </div>
   </div>
 )}

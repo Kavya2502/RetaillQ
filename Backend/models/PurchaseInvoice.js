@@ -31,6 +31,8 @@ const purchaseInvoiceSchema = new mongoose.Schema(
   filename: String,
   path: String,
   mimetype: String,
+  cloudinaryUrl: String,
+  publicId: String,
 },
   },
   { timestamps: true }

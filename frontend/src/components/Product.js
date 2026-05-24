@@ -16,7 +16,7 @@ function Product() {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products");
+      const res = await axios.get("https://retailiq.onrender.com/api/products");
       setProducts(res.data);
     } catch (error) {
       console.log(error);
@@ -39,11 +39,11 @@ function Product() {
     try {
       if (editId) {
         // UPDATE
-        await axios.put(`http://localhost:5000/api/products/${editId}`, form);
+        await axios.put(`https://retailiq.onrender.com/api/products/${editId}`, form);
         setEditId(null);
       } else {
         // ADD
-        await axios.post("http://localhost:5000/api/products", form);
+        await axios.post("https://retailiq.onrender.com/api/products", form);
       }
 
       setForm({
@@ -61,7 +61,7 @@ function Product() {
 
   // Delete product
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/products/${id}`);
+    await axios.delete(`https://retailiq.onrender.com/api/products/${id}`);
     fetchProducts();
   };
 

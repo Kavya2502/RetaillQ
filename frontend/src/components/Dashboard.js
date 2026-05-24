@@ -17,7 +17,7 @@ function Dashboard() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products");
+      const res = await axios.get("https://retailiq.onrender.com/api/products");
       setProducts(res.data);
     } catch (error) {
       console.log(error);

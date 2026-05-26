@@ -14,7 +14,7 @@ function Login({ setToken }) {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post("https://retailiq.onrender.com/api/auth/login", form);
+    const res = await axios.post("https://retailiq-1.onrender.com/api/auth/login", form);
 
     localStorage.setItem("token", res.data.token);
     setToken(res.data.token);

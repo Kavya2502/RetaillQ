@@ -28,16 +28,23 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role: "admin",
     });
-    res.status(200).json({
-  token,
 
-  user: {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  },
-});
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -77,6 +84,7 @@ router.post("/login", async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (error) {

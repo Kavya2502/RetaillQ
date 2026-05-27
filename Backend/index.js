@@ -11,13 +11,14 @@ const purchaseInvoiceRoutes = require("./routes/purchaseInvoiceRoutes");
 const app = express();
 
 /* ---------- CORS ---------- */
-app.use(
-  cors({
-    origin: "https://retail-q.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+const corsOptions = {
+  origin: "https://retail-q.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 /* ---------- Middleware ---------- */
 app.use(express.json());

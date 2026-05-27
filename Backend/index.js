@@ -10,6 +10,10 @@ const purchaseInvoiceRoutes = require("./routes/purchaseInvoiceRoutes");
 
 const app = express();
 
+app.get("/api/test-auth", (req, res) => {
+  res.send("Auth test route working");
+});
+
 /* ---------- CORS ---------- */
 app.use(
   cors({

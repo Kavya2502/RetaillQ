@@ -3,7 +3,7 @@ const router = express.Router();
 
 const PurchaseInvoice = require("../models/PurchaseInvoice");
 const Product = require("../models/Product");
-const protect = require("../middleware/authmiddleware");
+const protect = require("../middleware/authMiddleware");
 const upload = require("../config/cloudinary");
 
 // CREATE PURCHASE INVOICE

@@ -66,7 +66,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch("https://retailiq-2.onrender.com/api/auth/login", {
+      const response = await fetch("https://retailiq-backend-tbs4.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -173,7 +173,7 @@ function Register() {
     }
 
     try {
-      const response = await fetch("https://retailiq-2.onrender.com/api/auth/register", {
+      const response = await fetch("https://retailiq-backend-tbs4.onrender.com/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -268,7 +268,7 @@ function Dashboard() {
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://retailiq-2.onrender.com/api/products", {
+        const response = await fetch("https://retailiq-backend-tbs4.onrender.com/api/products", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -576,7 +576,7 @@ function Products() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("https://retailiq-2.onrender.com/api/products", {
+      const response = await fetch("https://retailiq-backend-tbs4.onrender.com/api/products", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -621,8 +621,8 @@ function Products() {
     e.preventDefault();
 
     const url = editingId
-      ? `https://retailiq-2.onrender.com/api/products/${editingId}`
-      : "https://retailiq-2.onrender.com/api/products";
+      ? `https://retailiq-backend-tbs4.onrender.com/api/products/${editingId}`
+      : "https://retailiq-backend-tbs4.onrender.com/api/products";
 
     const method = editingId ? "PUT" : "POST";
 
@@ -657,7 +657,7 @@ function Products() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://retailiq-2.onrender.com/api/products/${id}`, {
+      const response = await fetch(`https://retailiq-backend-tbs4.onrender.com/api/products/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -977,7 +977,7 @@ function LowStock() {
 
   React.useEffect(() => {
     const fetchProducts = async () => {
-      const res = await fetch("https://retailiq-2.onrender.com/api/products", {
+      const res = await fetch("https://retailiq-backend-tbs4.onrender.com/api/products", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -1020,7 +1020,7 @@ function Analytics() {
     const fetchInvoices = async () => {
       try {
         const response = await fetch(
-          "https://retailiq-2.onrender.com/api/invoices"
+          "https://retailiq-backend-tbs4.onrender.com/api/invoices"
         );
 
         const data = await response.json();
@@ -1438,7 +1438,7 @@ function Billing() {
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("https://retailiq-2.onrender.com/api/products", {
+        const res = await fetch("https://retailiq-backend-tbs4.onrender.com/api/products", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -1566,7 +1566,7 @@ paymentDate: new Date().toLocaleDateString(),
   items: cart,
   
 };
-  fetch("https://retailiq-2.onrender.com/api/invoices", {
+  fetch("https://retailiq-backend-tbs4.onrender.com/api/invoices", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -1899,7 +1899,7 @@ React.useEffect(() => {
   const fetchInvoices = async () => {
     try {
       const response = await fetch(
-        "https://retailiq-2.onrender.com/api/invoices"
+        "https://retailiq-backend-tbs4.onrender.com/api/invoices"
       );
 
       const data = await response.json();
@@ -1970,7 +1970,7 @@ const deleteInvoice = async (id) => {
 
   try {
     const response = await fetch(
-      `https://retailiq-2.onrender.com/api/invoices/${id}`,
+      `https://retailiq-backend-tbs4.onrender.com/api/invoices/${id}`,
       {
         method: "DELETE",
       }
@@ -1997,7 +1997,7 @@ const deleteInvoice = async (id) => {
 const saveInvoiceChanges = async () => {
   try {
     const response = await fetch(
-      `https://retailiq-2.onrender.com/api/invoices/${selectedInvoice._id}`,
+      `https://retailiq-backend-tbs4.onrender.com/api/invoices/${selectedInvoice._id}`,
       {
         method: "PUT",
         headers: {
@@ -2329,7 +2329,7 @@ function PurchaseInvoices() {
   const fetchPurchaseInvoices = async () => {
     try {
       const response = await fetch(
-        "https://retailiq-2.onrender.com/api/purchase-invoices",
+        "https://retailiq-backend-tbs4.onrender.com/api/purchase-invoices",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -2398,7 +2398,7 @@ function PurchaseInvoices() {
       }
 
       const response = await fetch(
-        "https://retailiq-2.onrender.com/api/purchase-invoices",
+        "https://retailiq-backend-tbs4.onrender.com/api/purchase-invoices",
         {
           method: "POST",
           headers: {
@@ -2444,7 +2444,7 @@ function PurchaseInvoices() {
 
   try {
     const response = await fetch(
-      `https://retailiq-2.onrender.com/api/purchase-invoices/${id}`,
+      `https://retailiq-backend-tbs4.onrender.com/api/purchase-invoices/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -2816,7 +2816,7 @@ function ProfitLoss() {
 
   const fetchSalesInvoices = async () => {
     try {
-      const response = await fetch("https://retailiq-2.onrender.com/api/invoices");
+      const response = await fetch("https://retailiq-backend-tbs4.onrender.com/api/invoices");
       const data = await response.json();
 
       if (response.ok) {
@@ -2830,7 +2830,7 @@ function ProfitLoss() {
   const fetchPurchaseInvoices = async () => {
     try {
       const response = await fetch(
-        "https://retailiq-2.onrender.com/api/purchase-invoices",
+        "https://retailiq-backend-tbs4.onrender.com/api/purchase-invoices",
         {
           headers: {
             Authorization: `Bearer ${token}`,

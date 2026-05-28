@@ -16,7 +16,7 @@ function Product() {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("https://retailiq-2.onrender.com/api/products");
+      const res = await axios.get("https://retailiq-backend-tbs4.onrender.com/api/products");
       setProducts(res.data);
     } catch (error) {
       console.log(error);
@@ -39,11 +39,11 @@ function Product() {
     try {
       if (editId) {
         // UPDATE
-        await axios.put(`https://retailiq-2.onrender.com/api/products/${editId}`, form);
+        await axios.put(`https://retailiq-backend-tbs4.onrender.com/api/products/${editId}`, form);
         setEditId(null);
       } else {
         // ADD
-        await axios.post("https://retailiq-2.onrender.com/api/products", form);
+        await axios.post("https://retailiq-backend-tbs4.onrender.com/api/products", form);
       }
 
       setForm({
@@ -61,7 +61,7 @@ function Product() {
 
   // Delete product
   const handleDelete = async (id) => {
-    await axios.delete(`https://retailiq-2.onrender.com/api/products/${id}`);
+    await axios.delete(`https://retailiq-backend-tbs4.onrender.com/api/products/${id}`);
     fetchProducts();
   };
 

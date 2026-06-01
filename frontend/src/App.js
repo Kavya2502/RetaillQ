@@ -2987,8 +2987,6 @@ function ProfitLoss() {
     </div>
   );
 }
-export default App;
-
 /*---------------Profile Page -------------------*/
 import axios from "axios";
 

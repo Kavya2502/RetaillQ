@@ -1180,50 +1180,68 @@ const pendingBalance = invoices.reduce((sum, invoice) => {
   );
 }
 /*--------------Pdf---------------*/
-function createPremiumInvoicePDF(invoice) {
+async function createPremiumInvoicePDF(invoice) {
+  const token = localStorage.getItem("token");
+
+  const profileRes = await axios.get(
+    "https://YOUR-BACKEND-URL.onrender.com/api/profile",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const profile = profileRes.data || {};
+
   const doc = new jsPDF("p", "mm", "a4");
 
   const items = invoice.items || [];
   const totalAmount = invoice.amount || 0;
-  const receivedAmount = invoice.status === "Paid" ? totalAmount : 0;
-  const balanceAmount = invoice.status === "Paid" ? 0 : totalAmount;
 
-  // Colors
+  const shopName = profile.shopName || "Your Shop Name";
+  const gstin = profile.gstin || "-";
+  const email = profile.email || "-";
+  const address = profile.address || "-";
+  const website = profile.website || "-";
+
+  const accountName = profile.accountName || shopName;
+  const ifsc = profile.ifsc || "-";
+  const accountNumber = profile.accountNumber || "-";
+  const bankName = profile.bankName || "-";
+
   const gold = [194, 154, 65];
   const lightGold = [250, 244, 225];
   const dark = [20, 20, 20];
 
-  // Outer border
   doc.setDrawColor(...gold);
   doc.setLineWidth(0.6);
   doc.rect(10, 10, 190, 277);
 
-  // Header area
   doc.setFillColor(255, 255, 255);
   doc.rect(10, 10, 190, 45, "F");
 
-  // Logo style box
   doc.setFillColor(37, 99, 235);
   doc.roundedRect(18, 18, 24, 24, 3, 3, "F");
   doc.setFillColor(245, 158, 11);
   doc.triangle(25, 20, 43, 24, 25, 42, "F");
+
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
-  doc.text("R", 25, 35);
+  doc.text(shopName.charAt(0).toUpperCase(), 25, 35);
 
-  // Company details
   doc.setTextColor(...dark);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
-  doc.text("RETAILIQ ELECTRONICS", 50, 22);
+  doc.text(shopName, 50, 22);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  doc.text("GSTIN: 10ABCDE1234F1Z5", 50, 28);
-  doc.text("retailiqelectronics@gmail.com", 50, 34);
-  doc.text("Mithapur, Bihar, India - 800001", 50, 40);
-  doc.text("Website: www.retailiq.in", 50, 46);
+  doc.text(`GSTIN: ${gstin}`, 50, 28);
+  doc.text(email, 50, 34);
+  doc.text(address, 50, 40);
+  doc.text(`Website: ${website}`, 50, 46);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
@@ -1232,7 +1250,6 @@ function createPremiumInvoicePDF(invoice) {
   doc.setDrawColor(...gold);
   doc.line(10, 55, 200, 55);
 
-  // Invoice info row
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
   doc.text("Invoice No.", 18, 65);
@@ -1244,7 +1261,6 @@ function createPremiumInvoicePDF(invoice) {
 
   doc.line(10, 80, 200, 80);
 
-  // Bill to / Ship to
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("Bill To", 18, 92);
@@ -1262,8 +1278,8 @@ function createPremiumInvoicePDF(invoice) {
   doc.line(105, 80, 105, 122);
   doc.line(10, 122, 200, 122);
 
-  // Table header
   let y = 133;
+
   doc.setFillColor(...lightGold);
   doc.rect(10, y - 7, 190, 10, "F");
 
@@ -1307,7 +1323,6 @@ function createPremiumInvoicePDF(invoice) {
     y += Math.max(12, itemLines.length * 5);
   });
 
-  // Subtotal row
   doc.line(10, y + 3, 200, y + 3);
   y += 12;
 
@@ -1323,10 +1338,8 @@ function createPremiumInvoicePDF(invoice) {
   y += 15;
   doc.line(10, y, 200, y);
 
-  // Bottom area
   const bottomY = y + 10;
 
-  // Terms
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.text("Terms & Conditions", 18, bottomY);
@@ -1337,86 +1350,46 @@ function createPremiumInvoicePDF(invoice) {
   doc.text("2. Warranty is covered by brand/company policy only.", 18, bottomY + 13);
   doc.text("3. Please keep this invoice for warranty claims.", 18, bottomY + 19);
 
-  // Bank details
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.text("Bank Details", 18, bottomY + 36);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  doc.text("Name: RETAILIQ ELECTRONICS", 18, bottomY + 44);
-  doc.text("IFSC: UTIB0005883", 18, bottomY + 51);
-  doc.text("Account No: 925020016090815", 18, bottomY + 58);
-  doc.text("Bank Name: AXIS BANK, BIHAR", 18, bottomY + 65);
+  doc.text(`Name: ${accountName}`, 18, bottomY + 44);
+  doc.text(`IFSC: ${ifsc}`, 18, bottomY + 51);
+  doc.text(`Account No: ${accountNumber}`, 18, bottomY + 58);
+  doc.text(`Bank Name: ${bankName}`, 18, bottomY + 65);
 
-  // Total box right side
+  const taxableAmount = totalAmount / 1.18;
+  const gstAmount = totalAmount - taxableAmount;
+  const cgstAmount = gstAmount / 2;
+  const sgstAmount = gstAmount / 2;
+
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
 
-  const taxableAmount =
-  totalAmount / 1.18;
+  doc.text("Taxable Amount", 112, bottomY + 5);
+  doc.text(`Rs. ${taxableAmount.toFixed(2)}`, 170, bottomY + 5);
 
-const gstAmount =
-  totalAmount - taxableAmount;
+  doc.text("CGST @9%", 112, bottomY + 13);
+  doc.text(`Rs. ${cgstAmount.toFixed(2)}`, 170, bottomY + 13);
 
-const cgstAmount = gstAmount / 2;
-
-const sgstAmount = gstAmount / 2;
-
-doc.text(
-  "Taxable Amount",
-  112,
-  bottomY + 5
-);
-
-doc.text(
-  `Rs. ${taxableAmount.toFixed(2)}`,
-  170,
-  bottomY + 5
-);
-
-doc.text(
-  "CGST @9%",
-  112,
-  bottomY + 13
-);
-
-doc.text(
-  `Rs. ${cgstAmount.toFixed(2)}`,
-  170,
-  bottomY + 13
-);
-
-doc.text(
-  "SGST @9%",
-  112,
-  bottomY + 21
-);
-
-doc.text(
-  `Rs. ${sgstAmount.toFixed(2)}`,
-  170,
-  bottomY + 21
-);
+  doc.text("SGST @9%", 112, bottomY + 21);
+  doc.text(`Rs. ${sgstAmount.toFixed(2)}`, 170, bottomY + 21);
 
   doc.line(112, bottomY + 27, 190, bottomY + 27);
 
-doc.setFont("helvetica", "bold");
-doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("Total Amount", 112, bottomY + 36);
+  doc.text(`Rs. ${totalAmount.toFixed(2)}`, 168, bottomY + 36);
 
-doc.text("Total Amount", 112, bottomY + 36);
-
-doc.text(
-  `Rs. ${totalAmount.toFixed(2)}`,
-  168,
-  bottomY + 36
-);
-  // Signature box
   doc.roundedRect(132, 255, 52, 20, 2, 2);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.text("Signature", 150, 266);
-  doc.text("RETAILIQ ELECTRONICS", 141, 272);
+  doc.text(shopName, 141, 272);
 
   doc.save(`${invoice.invoiceNo || "invoice"}.pdf`);
 }
@@ -3015,3 +2988,90 @@ function ProfitLoss() {
   );
 }
 export default App;
+
+/*---------------Profile Page -------------------*/
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+function Profile() {
+  const [form, setForm] = useState({
+    shopName: "",
+    gstin: "",
+    email: "",
+    address: "",
+    website: "",
+    bankName: "",
+    accountName: "",
+    accountNumber: "",
+    ifsc: "",
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get("https://YOUR-BACKEND-URL.onrender.com/api/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setForm({
+        shopName: res.data.shopName || "",
+        gstin: res.data.gstin || "",
+        email: res.data.email || "",
+        address: res.data.address || "",
+        website: res.data.website || "",
+        bankName: res.data.bankName || "",
+        accountName: res.data.accountName || "",
+        accountNumber: res.data.accountNumber || "",
+        ifsc: res.data.ifsc || "",
+      });
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const saveProfile = async () => {
+    const token = localStorage.getItem("token");
+
+    await axios.post(
+      "https://YOUR-BACKEND-URL.onrender.com/api/profile",
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Profile saved successfully");
+  };
+
+  return (
+    <div className="profile-page">
+      <h2>Business Profile</h2>
+
+      <input name="shopName" placeholder="Shop Name" value={form.shopName} onChange={handleChange} />
+      <input name="gstin" placeholder="GSTIN" value={form.gstin} onChange={handleChange} />
+      <input name="email" placeholder="Business Email" value={form.email} onChange={handleChange} />
+      <input name="address" placeholder="Shop Address" value={form.address} onChange={handleChange} />
+      <input name="website" placeholder="Website" value={form.website} onChange={handleChange} />
+
+      <h3>Bank Details</h3>
+
+      <input name="accountName" placeholder="Account Holder Name" value={form.accountName} onChange={handleChange} />
+      <input name="accountNumber" placeholder="Account Number" value={form.accountNumber} onChange={handleChange} />
+      <input name="ifsc" placeholder="IFSC Code" value={form.ifsc} onChange={handleChange} />
+      <input name="bankName" placeholder="Bank Name" value={form.bankName} onChange={handleChange} />
+
+      <button onClick={saveProfile}>Save Profile</button>
+    </div>
+  );
+}
+
+export default Profile;

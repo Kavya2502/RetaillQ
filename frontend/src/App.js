@@ -326,6 +326,7 @@ function Dashboard() {
 )}
 
 <Link to="/billing">Billing</Link>
+<Link to="/profile">Profile</Link>
 
 <Link to="/sales-invoices">Sales Invoices</Link>
 
@@ -488,6 +489,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+         <Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/analytics"

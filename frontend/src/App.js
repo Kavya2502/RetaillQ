@@ -2990,7 +2990,6 @@ function ProfitLoss() {
 export default App;
 
 /*---------------Profile Page -------------------*/
-import { useEffect, useState } from "react";
 import axios from "axios";
 
 function Profile() {

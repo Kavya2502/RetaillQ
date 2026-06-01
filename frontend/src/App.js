@@ -3,6 +3,8 @@ import {BrowserRouter,Routes,Route,Link,useNavigate,Navigate,} from "react-route
 import "./App.css";
 import {BarChart,Bar,XAxis,YAxis,Tooltip,ResponsiveContainer,} from "recharts";
 import jsPDF from "jspdf";
+import axios from "axios";
+import Profile from "./pages/Profile";
 
 /* ---------------- HOME ---------------- */
 function Home() {
@@ -1184,7 +1186,7 @@ async function createPremiumInvoicePDF(invoice) {
   const token = localStorage.getItem("token");
 
   const profileRes = await axios.get(
-    "https://YOUR-BACKEND-URL.onrender.com/api/profile",
+    "https://retailiq-backend-tbs4.onrender.com/api/profile",
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -2987,88 +2989,4 @@ function ProfitLoss() {
     </div>
   );
 }
-/*---------------Profile Page -------------------*/
-import axios from "axios";
-
-function Profile() {
-  const [form, setForm] = useState({
-    shopName: "",
-    gstin: "",
-    email: "",
-    address: "",
-    website: "",
-    bankName: "",
-    accountName: "",
-    accountNumber: "",
-    ifsc: "",
-  });
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get("https://YOUR-BACKEND-URL.onrender.com/api/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setForm({
-        shopName: res.data.shopName || "",
-        gstin: res.data.gstin || "",
-        email: res.data.email || "",
-        address: res.data.address || "",
-        website: res.data.website || "",
-        bankName: res.data.bankName || "",
-        accountName: res.data.accountName || "",
-        accountNumber: res.data.accountNumber || "",
-        ifsc: res.data.ifsc || "",
-      });
-    };
-
-    fetchProfile();
-  }, []);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const saveProfile = async () => {
-    const token = localStorage.getItem("token");
-
-    await axios.post(
-      "https://YOUR-BACKEND-URL.onrender.com/api/profile",
-      form,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    alert("Profile saved successfully");
-  };
-
-  return (
-    <div className="profile-page">
-      <h2>Business Profile</h2>
-
-      <input name="shopName" placeholder="Shop Name" value={form.shopName} onChange={handleChange} />
-      <input name="gstin" placeholder="GSTIN" value={form.gstin} onChange={handleChange} />
-      <input name="email" placeholder="Business Email" value={form.email} onChange={handleChange} />
-      <input name="address" placeholder="Shop Address" value={form.address} onChange={handleChange} />
-      <input name="website" placeholder="Website" value={form.website} onChange={handleChange} />
-
-      <h3>Bank Details</h3>
-
-      <input name="accountName" placeholder="Account Holder Name" value={form.accountName} onChange={handleChange} />
-      <input name="accountNumber" placeholder="Account Number" value={form.accountNumber} onChange={handleChange} />
-      <input name="ifsc" placeholder="IFSC Code" value={form.ifsc} onChange={handleChange} />
-      <input name="bankName" placeholder="Bank Name" value={form.bankName} onChange={handleChange} />
-
-      <button onClick={saveProfile}>Save Profile</button>
-    </div>
-  );
-}
-
-export default Profile;
+export default App;

@@ -72,26 +72,34 @@ function Profile() {
 
   return (
     <div className="profile-page">
-      <div className="profile-card">
-        <h2>Business Profile</h2>
-        <p>These details will appear on your invoice PDF.</p>
+  <div className="profile-card">
 
-        <input name="shopName" placeholder="Shop Name" value={profile.shopName} onChange={handleChange} />
-        <input name="gstin" placeholder="GSTIN" value={profile.gstin} onChange={handleChange} />
-        <input name="email" placeholder="Business Email" value={profile.email} onChange={handleChange} />
-        <input name="address" placeholder="Shop Address" value={profile.address} onChange={handleChange} />
-        <input name="website" placeholder="Website" value={profile.website} onChange={handleChange} />
+    <h2>Business Profile</h2>
+    <p>These details will appear on your invoice PDF.</p>
 
-        <h3>Bank Details</h3>
-
-        <input name="accountName" placeholder="Account Holder Name" value={profile.accountName} onChange={handleChange} />
-        <input name="accountNumber" placeholder="Account Number" value={profile.accountNumber} onChange={handleChange} />
-        <input name="ifsc" placeholder="IFSC Code" value={profile.ifsc} onChange={handleChange} />
-        <input name="bankName" placeholder="Bank Name" value={profile.bankName} onChange={handleChange} />
-
-        <button onClick={saveProfile}>Save Profile</button>
-      </div>
+    <div className="profile-grid">
+      <input name="shopName" placeholder="Shop Name" />
+      <input name="gstin" placeholder="GSTIN" />
+      <input name="email" placeholder="Business Email" />
+      <input name="address" placeholder="Shop Address" />
+      <input name="website" placeholder="Website" />
     </div>
+
+    <h3>Bank Details</h3>
+
+    <div className="profile-grid">
+      <input name="accountName" placeholder="Account Holder Name" />
+      <input name="accountNumber" placeholder="Account Number" />
+      <input name="ifsc" placeholder="IFSC Code" />
+      <input name="bankName" placeholder="Bank Name" />
+    </div>
+
+    <button className="save-profile-btn">
+      Save Profile
+    </button>
+
+  </div>
+</div>
   );
 }
 

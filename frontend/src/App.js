@@ -313,6 +313,7 @@ function Dashboard() {
 
         <div className="nav-links">
           <Link to="/dashboard">Dashboard</Link>
+          <Link to="/profile">Profile</Link>
 
 {user?.role === "admin" && (
   <Link to="/products">Products</Link>
@@ -326,7 +327,6 @@ function Dashboard() {
 )}
 
 <Link to="/billing">Billing</Link>
-<Link to="/profile">Profile</Link>
 
 <Link to="/sales-invoices">Sales Invoices</Link>
 

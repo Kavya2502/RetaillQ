@@ -1,24 +1,38 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const purchaseInvoiceRoutes = require("./routes/purchaseInvoiceRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const app = express();
-const profileRoutes = require("./routes/profileroutes");
-
-app.use("/api/profile", profileRoutes);
-
 
 /* ---------- CORS ---------- */
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://retaill-q.vercel.app");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  const allowedOrigins = [
+  "http://localhost:3000",
+  "https://retaill-q.vercel.app",
+  "https://retailiq-backend.onrender.com"
+];
+
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
@@ -53,6 +67,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
+app.use("/api/profile", profileRoutes);
 
 /* ---------- MongoDB Connection ---------- */
 mongoose

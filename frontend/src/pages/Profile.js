@@ -14,7 +14,7 @@ function Profile() {
     bankName: "",
   });
 
-  const API_URL = "https://retailiq-backend.onrender.com";
+  const API_URL = "https://retailiq-backend-tbs4.onrender.com";
 
   useEffect(() => {
     fetchProfile();

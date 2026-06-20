@@ -1029,21 +1029,30 @@ function Analytics() {
 
   React.useEffect(() => {
     const fetchInvoices = async () => {
-      try {
-        const response = await fetch(
-          "https://retailiq-backend-tbs4.onrender.com/api/invoices"
-        );
+  try {
+    const token = localStorage.getItem("token");
 
-        const data = await response.json();
-
-        if (response.ok) {
-          setInvoices(data);
-        }
-
-      } catch (error) {
-        console.log(error);
+    const response = await fetch(
+      "https://retailiq-backend-tbs4.onrender.com/api/invoices",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    };
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setInvoices(data);
+    } else {
+      console.log(data);
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
     fetchInvoices();
   }, []);
@@ -2808,7 +2817,15 @@ function ProfitLoss() {
 
   const fetchSalesInvoices = async () => {
     try {
-      const response = await fetch("https://retailiq-backend-tbs4.onrender.com/api/invoices");
+      const response = await fetch(
+        "https://retailiq-backend-tbs4.onrender.com/api/invoices",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const data = await response.json();
 
       if (response.ok) {
@@ -2841,12 +2858,24 @@ function ProfitLoss() {
   };
 
   const getPurchasePrice = (productName) => {
-  let matchedPrice = 0;
+    let matchedPrice = 0;
 
-  purchaseInvoices.forEach((invoice) => {
-    if (invoice.items && invoice.items.length > 0) {
-      invoice.items.forEach((item) => {
-        const purchaseName = item.productName?.toLowerCase().trim();
+    purchaseInvoices.forEach((invoice) => {
+      if (invoice.items && invoice.items.length > 0) {
+        invoice.items.forEach((item) => {
+          const purchaseName = item.productName?.toLowerCase().trim();
+          const saleName = productName?.toLowerCase().trim();
+
+          if (
+            purchaseName === saleName ||
+            purchaseName?.includes(saleName) ||
+            saleName?.includes(purchaseName)
+          ) {
+            matchedPrice = Number(item.purchasePrice || 0);
+          }
+        });
+      } else {
+        const purchaseName = invoice.productName?.toLowerCase().trim();
         const saleName = productName?.toLowerCase().trim();
 
         if (
@@ -2854,25 +2883,13 @@ function ProfitLoss() {
           purchaseName?.includes(saleName) ||
           saleName?.includes(purchaseName)
         ) {
-          matchedPrice = Number(item.purchasePrice || 0);
+          matchedPrice = Number(invoice.purchasePrice || 0);
         }
-      });
-    } else {
-      const purchaseName = invoice.productName?.toLowerCase().trim();
-      const saleName = productName?.toLowerCase().trim();
-
-      if (
-        purchaseName === saleName ||
-        purchaseName?.includes(saleName) ||
-        saleName?.includes(purchaseName)
-      ) {
-        matchedPrice = Number(invoice.purchasePrice || 0);
       }
-    }
-  });
+    });
 
-  return matchedPrice;
-};
+    return matchedPrice;
+  };
 
   const productProfitMap = {};
 
@@ -2890,6 +2907,7 @@ function ProfitLoss() {
           salesAmount: 0,
           purchaseCost: 0,
           profit: 0,
+          profitPercent: 0,
         };
       }
 
@@ -2897,14 +2915,15 @@ function ProfitLoss() {
       productProfitMap[name].salesAmount += sellingPrice * qty;
       productProfitMap[name].purchaseCost += purchasePrice * qty;
       productProfitMap[name].profit += (sellingPrice - purchasePrice) * qty;
+
       productProfitMap[name].profitPercent =
-      productProfitMap[name].purchaseCost > 0
-    ? (
-        (productProfitMap[name].profit /
-          productProfitMap[name].purchaseCost) *
-        100
-      ).toFixed(2)
-    : 0;
+        productProfitMap[name].purchaseCost > 0
+          ? (
+              (productProfitMap[name].profit /
+                productProfitMap[name].purchaseCost) *
+              100
+            ).toFixed(2)
+          : 0;
     });
   });
 
@@ -2924,7 +2943,6 @@ function ProfitLoss() {
     (sum, item) => sum + item.profit,
     0
   );
-  
 
   const profitMargin =
     totalSales > 0 ? ((grossProfit / totalSales) * 100).toFixed(2) : 0;
@@ -2975,15 +2993,15 @@ function ProfitLoss() {
               <th>Cost Price / Unit</th>
               <th>Selling Amount</th>
               <th>Total Cost</th>
-              <th>Profit</th>  
-              <th>Profit %</th>                                           
+              <th>Profit</th>
+              <th>Profit %</th>
             </tr>
           </thead>
 
           <tbody>
             {productProfitData.length === 0 ? (
               <tr>
-                <td colSpan="6" className="empty-row">
+                <td colSpan="7" className="empty-row">
                   No sold products found.
                 </td>
               </tr>
@@ -2992,7 +3010,12 @@ function ProfitLoss() {
                 <tr key={item.productName}>
                   <td>{item.productName}</td>
                   <td>{item.soldQty}</td>
-                  <td>₹{item.soldQty > 0 ? (item.purchaseCost / item.soldQty).toFixed(2): "0.00"}</td>
+                  <td>
+                    ₹
+                    {item.soldQty > 0
+                      ? (item.purchaseCost / item.soldQty).toFixed(2)
+                      : "0.00"}
+                  </td>
                   <td>₹{item.salesAmount.toFixed(2)}</td>
                   <td>₹{item.purchaseCost.toFixed(2)}</td>
                   <td>₹{item.profit.toFixed(2)}</td>

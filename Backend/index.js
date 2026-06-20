@@ -13,15 +13,19 @@ const app = express();
 /* ---------- CORS ---------- */
 app.use((req, res, next) => {
   const allowedOrigins = [
-  "http://localhost:3000",
-  "https://retaill-q.vercel.app",
-  "https://retaill-oyiam86nj-kavya-rani-s-projects.vercel.app",
-  "https://retailiq-backend-tbs4.onrender.com"
-];
+    "http://localhost:3000",
+    "https://retaill-q.vercel.app",
+    "https://retaill-oyiam86nj-kavya-rani-s-projects.vercel.app",
+    "https://retaill-q-git-main-kavya-rani-s-projects.vercel.app",
+    "https://retailiq-backend-tbs4.onrender.com",
+  ];
 
   const origin = req.headers.origin;
 
-  if (allowedOrigins.includes(origin)) {
+  if (
+    allowedOrigins.includes(origin) ||
+    (origin && origin.endsWith(".vercel.app"))
+  ) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
@@ -34,6 +38,8 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization"
   );
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);

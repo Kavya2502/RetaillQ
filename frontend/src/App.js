@@ -1553,8 +1553,9 @@ paymentDate: new Date().toLocaleDateString(),
   fetch("https://retailiq-backend-tbs4.onrender.com/api/invoices", {
   method: "POST",
   headers: {
-    "Content-Type": "application/json",
-  },
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${token}`,
+},
   body: JSON.stringify(newInvoice),
 })
   .then(async (res) => {
@@ -1882,9 +1883,16 @@ const [invoices, setInvoices] = useState([]);
 React.useEffect(() => {
   const fetchInvoices = async () => {
     try {
-      const response = await fetch(
-        "https://retailiq-backend-tbs4.onrender.com/api/invoices"
-      );
+      const token = localStorage.getItem("token");
+
+const response = await fetch(
+  "https://retailiq-backend-tbs4.onrender.com/api/invoices",
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
       const data = await response.json();
 

@@ -1889,6 +1889,7 @@ const [editedName, setEditedName] = useState("");
 const [editedPhone, setEditedPhone] = useState("");
 const [editedStatus, setEditedStatus] = useState("");
 const [invoices, setInvoices] = useState([]);
+const token = localStorage.getItem("token");
 React.useEffect(() => {
   const fetchInvoices = async () => {
     try {
@@ -2006,6 +2007,8 @@ const saveInvoiceChanges = async () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+
         },
         body: JSON.stringify({
           customerName: editedName,

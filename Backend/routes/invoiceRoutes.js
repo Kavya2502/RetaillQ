@@ -1,29 +1,38 @@
 const express = require("express");
 const router = express.Router();
+
 const Invoice = require("../models/Invoice");
 const Product = require("../models/Product");
+const authMiddleware = require("../middleware/authMiddleware");
 
-// Create invoice
-router.post("/", async (req, res) => {
+
+// Create Invoice
+router.post("/", authMiddleware, async (req, res) => {
   try {
-    const invoice = await Invoice.create(req.body);
+    const invoice = await Invoice.create({
+      ...req.body,
+      userId: req.user,
+    });
+
     for (const item of req.body.items) {
-  await Product.findByIdAndUpdate(
-    item._id,
-    {
-      $inc: {
-        stock: -Number(item.qty || 1),
-      },
+      await Product.findByIdAndUpdate(
+        item._id,
+        {
+          $inc: {
+            stock: -Number(item.qty || 1),
+          },
+        }
+      );
     }
-  );
-}
+
     res.status(201).json({
       message: "Invoice saved successfully",
       invoice,
     });
-    
+
   } catch (error) {
     console.log(error);
+
     res.status(500).json({
       message: "Could not save invoice",
     });
@@ -31,24 +40,34 @@ router.post("/", async (req, res) => {
 });
 
 
-// Get all invoices
-router.get("/", async (req, res) => {
+// Get User Invoices
+router.get("/", authMiddleware, async (req, res) => {
   try {
-    const invoices = await Invoice.find().sort({ createdAt: -1 });
+
+    const invoices = await Invoice.find({
+      userId: req.user,
+    }).sort({ createdAt: -1 });
 
     res.status(200).json(invoices);
+
   } catch (error) {
     console.log(error);
+
     res.status(500).json({
       message: "Could not fetch invoices",
     });
   }
 });
 
-// Delete invoice
-router.delete("/:id", async (req, res) => {
+
+// Delete Invoice
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
-    await Invoice.findByIdAndDelete(req.params.id);
+
+    await Invoice.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user,
+    });
 
     res.status(200).json({
       message: "Invoice deleted successfully",
@@ -62,11 +81,17 @@ router.delete("/:id", async (req, res) => {
     });
   }
 });
-// Update invoice
-router.put("/:id", async (req, res) => {
+
+
+// Update Invoice
+router.put("/:id", authMiddleware, async (req, res) => {
   try {
-    const updatedInvoice = await Invoice.findByIdAndUpdate(
-      req.params.id,
+
+    const updatedInvoice = await Invoice.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        userId: req.user,
+      },
       req.body,
       { new: true }
     );

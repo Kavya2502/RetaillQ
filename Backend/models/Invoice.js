@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const invoiceSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     id: Number,
     date: String,
     invoiceNo: String,
@@ -28,7 +34,6 @@ const invoiceSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    
   },
   { timestamps: true }
 );

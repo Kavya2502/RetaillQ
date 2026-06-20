@@ -19,27 +19,6 @@ Backend: Render API
 * Admin & Staff Roles
 * Responsive Premium UI
 
-Screenshots
-Dashboard
-
-(Your Dashboard screenshot)
-
-Product Management
-
-(Your Product Management screenshot)
-
-Sales Billing
-
-(Your Billing screenshot)
-
-Analytics & Profit/Loss
-
-(Add screenshots of Analytics and Profit/Loss pages too)
-
-Purchase Invoices
-
-(Add Purchase Invoice page screenshot)
-
 ## Tech Stack
 
 ### Frontend

@@ -15,6 +15,23 @@ RetailIQ is a full-stack inventory and billing management system designed for el
 * Admin & Staff Roles
 * Responsive Premium UI
 
+## Screenshots
+
+Dashboard
+![Dashboard](Dasboard.png)
+
+Product Management
+![Products](Products.png)
+
+Sales Billing
+![Billing](Billing.png)
+
+Analytics & Profit/Loss
+![Analytics](<Sales Analytics.png>)
+
+Purchase Invoices
+![Purchase Invoice](<Purchase Invoice.png>)
+
 ## Tech Stack
 
 ### Frontend

@@ -15,7 +15,7 @@ app.use((req, res, next) => {
   const allowedOrigins = [
   "http://localhost:3000",
   "https://retaill-q.vercel.app",
-  "https://retaill-9vev4v8pr-kavya-rani-s-projects.vercel.app",
+  "https://retaill-oyiam86nj-kavya-rani-s-projects.vercel.app",
   "https://retailiq-backend-tbs4.onrender.com"
 ];
 

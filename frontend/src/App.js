@@ -1974,6 +1974,9 @@ const deleteInvoice = async (id) => {
       `https://retailiq-backend-tbs4.onrender.com/api/invoices/${id}`,
       {
         method: "DELETE",
+         headers: {
+      Authorization: `Bearer ${token}`,
+    },
       }
     );
 

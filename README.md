@@ -22,19 +22,19 @@ Backend: Render API
 ## Screenshots
 
 Dashboard
-![Dashboard](Dasboard.png)
+![Dashboard](frontend/Screenshots/Dasboard.png)
 
 Product Management
-![Products](Products.png)
+![Products](frontend/Screenshots/Products.png)
 
 Sales Billing
-![Billing](Billing.png)
+![Billing](frontend/Screenshots/Billing.png)
 
 Analytics & Profit/Loss
-![Analytics](<Sales Analytics.png>)
+![Analytics](<frontend/Screenshots/Sales Analytics.png>)
 
 Purchase Invoices
-![Purchase Invoice](<Purchase Invoice.png>)
+![Purchase Invoice](<frontend/Screenshots/Purchase Invoice.png>)
 
 ## Tech Stack
 

@@ -2,6 +2,10 @@
 
 RetailIQ is a full-stack inventory and billing management system designed for electronics stores. The application helps businesses manage products, invoices, sales analytics, purchase tracking, and profit/loss monitoring in one centralized dashboard.
 
+Live Demo
+Frontend: https://retail-q.vercel.app
+Backend: Render API
+
 ## Features
 
 * Product Management
@@ -14,6 +18,27 @@ RetailIQ is a full-stack inventory and billing management system designed for el
 * Authentication & Protected Routes
 * Admin & Staff Roles
 * Responsive Premium UI
+
+Screenshots
+Dashboard
+
+(Your Dashboard screenshot)
+
+Product Management
+
+(Your Product Management screenshot)
+
+Sales Billing
+
+(Your Billing screenshot)
+
+Analytics & Profit/Loss
+
+(Add screenshots of Analytics and Profit/Loss pages too)
+
+Purchase Invoices
+
+(Add Purchase Invoice page screenshot)
 
 ## Tech Stack
 

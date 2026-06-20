@@ -52,7 +52,9 @@ RetailIQ is a full-stack inventory and billing management system designed for el
 * GST Reports
 * Supplier Management
 
-Note: The backend is also maintained separately in the RetailIQ-Backend repository for deployment purposes on Render.
+## Note
+
+The backend is also maintained separately in the RetailIQ-Backend repository for deployment purposes on Render.
 
 ## Author
 
